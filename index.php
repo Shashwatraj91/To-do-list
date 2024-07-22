@@ -1,9 +1,9 @@
 <?php
-  $username="root"
-  $servername="localhost"
-  $password=""
-  $database="notes"
-  $conn=mysqli_connect($servername,$username,$password,$database);
+  $username="root";
+  $server="localhost";
+  $password="";
+  $database="notes";
+  $conn=mysqli_connect($server,$username,$password,$database);
   if(!$conn){
     die("sorry we failed to connect: "+mysqli_connect_error());
   }
