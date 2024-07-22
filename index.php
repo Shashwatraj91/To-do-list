@@ -7,9 +7,6 @@
   if(!$conn){
     die("sorry we failed to connect: "+mysqli_connect_error());
   }
-  else{
-    echo("DB connected");
-  }
 ?>
 
 
@@ -77,6 +74,34 @@
         </div>
         <button type="submit" class="btn btn-primary">Add Note</button>
         </form>
+    </div>
+    <div class="container">
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Sno</th>
+      <th scope="col">Title</th>
+      <th scope="col">Description</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+      <?php
+        $sql="SELECT * FROM `notes`";
+        $result = mysqli_query($conn,$sql);
+        while($row=mysqli_fetch_assoc($result)){
+          echo "<tr>
+          <th scope='row'>".$row["sno"]."</th>
+          <td>".$row["title"]."</td>
+          <td>".$row["desc"]."</td>
+          <td>delet edit</td>
+        </tr>";
+        } 
+      ?>
+    
+  </tbody>
+</table>
+      
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </body>
