@@ -4,8 +4,21 @@
   $password="";
   $database="notes";
   $conn=mysqli_connect($server,$username,$password,$database);
+  $insert=false;
   if(!$conn){
     die("sorry we failed to connect: "+mysqli_connect_error());
+  }
+  if($_SERVER['REQUEST_METHOD']=='POST'){
+    $title=$_POST['title'];
+    $desc=$_POST['desc'];
+    $sql="INSERT INTO `notes` (`title`, `desc`, `time`) VALUES ('$title', '$desc', current_timestamp())";
+    $result=mysqli_query($conn,$sql);
+    if($result){
+      $insert=true;
+    }
+    else{
+      echo "error";
+    }
   }
 ?>
 
@@ -55,24 +68,38 @@
     </div>
   </div>
 </nav>
+<div>
+<?php 
+  if($insert){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success</strong>You have added the note successfully.
+    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+  </div>";
+  }
+  else{
+    echo "notes cant added";
+  }
+?>
+</div>
+
     <div class="container">
         
-                <form>
-        <div class="my-3">
-            <h2>Add a Note</h2>
-            <label for="title" class="form-label">Note Title</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
-            
-        </div>
-        <div class="mb-3">
-            <div class="mb-3">
-                <label for="desc" class="form-label">Notes Description</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="mb-3 form-check">
-        </div>
-        <button type="submit" class="btn btn-primary">Add Note</button>
+          <form action="/TO-DO-LIST/index.php" method="post">
+              <div class="my-3">
+                  <h2>Add a Note</h2>
+                  <label for="title" class="form-label">Note Title</label>
+                  <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
+                  
+              </div>
+              <div class="mb-3">
+                  <div class="mb-3">
+                      <label for="desc" class="form-label">Notes Description</label>
+                      <textarea class="form-control" id="exampleFormControlTextarea1" name="desc" rows="3"></textarea>
+                  </div>
+              </div>
+              <!-- <div class="mb-3 form-check">
+              </div> -->
+              <button type="submit" class="btn btn-primary">Add Note</button>
         </form>
     </div>
     <div class="container">
