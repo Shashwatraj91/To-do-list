@@ -5,8 +5,16 @@
   $database="notes";
   $conn=mysqli_connect($server,$username,$password,$database);
   $insert=false;
+  $update=false;
+  $delete=false;
   if(!$conn){
     die("sorry we failed to connect: "+mysqli_connect_error());
+  }
+  if(isset($_GET['delete'])){
+    $sno=$_GET['delete'];
+    $sql="DELETE FROM `notes` WHERE `sno`=$sno";
+    $result=mysqli_query($conn,$sql);
+    $delete=true;
   }
   if($_SERVER['REQUEST_METHOD']=='POST'){
     if(isset($_POST['snoEdit'])){
@@ -16,6 +24,9 @@
       $desc=$_POST['descEdit'];
       $sql="UPDATE `notes` SET `title` = '$title' , `desc` = '$desc' WHERE `notes`.`sno` = $sno ";
       $result=mysqli_query($conn,$sql);
+      if($result){
+        $update=true;
+      }
     }
     else{
       $title=$_POST['title'];
@@ -167,7 +178,29 @@
 <?php 
   if($insert){
     echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
-    <strong>Success</strong>You have added the note successfully.
+    <strong>Success</strong>You have inserted the note successfully.
+    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+  </div>";
+  }
+  // else{
+  //   echo "notes cant added";
+  // }
+?>
+<?php 
+  if($update){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success</strong>You have updated the note successfully.
+    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+  </div>";
+  }
+  // else{
+  //   echo "notes cant added";
+  // }
+?>
+<?php 
+  if($delete){
+    echo "<div class='alert alert-success alert-dismissible fade show' role='alert'>
+    <strong>Success</strong>You have deleted the note successfully.
     <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
   </div>";
   }
@@ -218,7 +251,7 @@
           <th scope='row'>".$sno."</th>
           <td>".$row["title"]."</td>
           <td>".$row["desc"]."</td>
-          <td><button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='btn btn-sm btn-primary'>Delete</button></td>
+          <td><button class='edit btn btn-sm btn-primary' id=".$row['sno'].">Edit</button> <button class='delete btn btn-sm btn-primary' id=d".$row['sno'].">Delete</button></td>
         </tr>";
         } 
       ?>
@@ -248,6 +281,20 @@
           console.log(e.target.id);
           // const myModalAlternative = new bootstrap.Modal('#editModal', options);
           $('#editModal').modal('toggle');
+        })
+      })
+      deletes=document.getElementsByClassName('delete');
+      Array.from(deletes).forEach((element)=>{
+        element.addEventListener("click",(e)=>{
+          sno=e.target.id.substr(1,);
+          if(confirm("Press a button!")){
+            console.log("yes");
+            window.location=`/TO-DO-LIST/index.php?delete=${sno}`;
+
+          }
+          else{
+            console.log("no");
+          }
         })
       })
     </script>
